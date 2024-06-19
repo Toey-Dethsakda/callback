@@ -6,10 +6,10 @@ settings:
 
 dependencies:
   axios:
-    specifier: ^0.21.4
-    version: 0.21.4
+    specifier: ^0.24.0
+    version: 0.24.0
   express:
-    specifier: ^4.19.2
+    specifier: ^4.17.2
     version: 4.19.2
 
 packages:
@@ -26,8 +26,8 @@ packages:
     resolution: {integrity: sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg==}
     dev: false
 
-  /axios@0.21.4:
-    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
+  /axios@0.24.0:
+    resolution: {integrity: sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==}
     dependencies:
       follow-redirects: 1.15.6
     transitivePeerDependencies:
