@@ -13,7 +13,7 @@ app.post('/callback', (req, res) => {
 
 app.get('/invoke-callback', async (req, res) => {
     try {
-        const response = await axios.post('http://localhost:3000/callback', {
+        const response = await axios.post('https://callback-one.vercel.app//callback', {
             key: 'value'
         }, {
             headers: {
