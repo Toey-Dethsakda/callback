@@ -8,7 +8,7 @@ app.post('/callback', (req, res) => {
     const callbackData = req.body;
     console.log('Received callback data:', callbackData);
 
-    res.status(200).send({ message: 'Callback received successfully' });
+    res.status(200).send({ message: 'Callback received successfully', callbackData });
 });
 
 app.get('/invoke-callback', async (req, res) => {
