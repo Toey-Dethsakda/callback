@@ -8,12 +8,21 @@ const client = new MongoClient(mongoURI);
 
 app.use(express.json());
 
+client.connect((err) => {
+    if (err) {
+        console.error('Failed to connect to MongoDB:', err);
+    } else {
+        console.log('Connected to MongoDB');
+    }
+});
+
 app.get('/', async (req, res) => {
     res.status(200).send("Hello callback");
 });
 
 app.post('/callback', async (req, res) => {
     const callbackData = req.body;
+    // console.log('callbackData = ', JSON.stringify(callbackData));
     console.log('Received callback data:', callbackData);
 
     try {
@@ -35,6 +44,7 @@ app.post('/callback', async (req, res) => {
 app.get('/invoke-callback', async (req, res) => {
     try {
         const response = await axios.post('https://callback-one.vercel.app/callback', {
+        // const response = await axios.post('localhost:3000/callback', {
             key: 'value'
         }, {
             headers: {
