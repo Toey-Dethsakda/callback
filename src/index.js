@@ -4,7 +4,7 @@ const axios = require('axios');
 
 app.use(express.json());
 
-app.post('https://callback-one.vercel.app/callback', (req, res) => {
+app.post('/callback', (req, res) => {
     const callbackData = req.body;
     console.log('Received callback data:', callbackData);
 
@@ -13,7 +13,7 @@ app.post('https://callback-one.vercel.app/callback', (req, res) => {
 
 app.get('/invoke-callback', async (req, res) => {
     try {
-        const response = await axios.post('https://callback-one.vercel.app//callback', {
+        const response = await axios.post('https://callback-one.vercel.app/callback', {
             key: 'value'
         }, {
             headers: {
