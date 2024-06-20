@@ -13,10 +13,7 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/callback/checkBalance', async (req, res) => {
-    
-    const callbackData = {
-        ...req
-    };
+    const callbackData = req.body;
     console.log('Received callback data:', callbackData);
 
     try {
