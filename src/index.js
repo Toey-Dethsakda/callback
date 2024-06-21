@@ -78,7 +78,51 @@ app.post('/callback/checkBalance', async (req, res) => {
         
         await client.connect();
         const db = client.db('gbcp');
-        const collection = db.collection('callback');
+        const collection = db.collection('check_balance');
+        const result = await collection.insertOne(callbackData);
+        console.log('Saved to database:', result);
+        res.status(200).send(response);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.post('/callback/placeBets', async (req, res) => {
+
+    try {
+        const { id, statusCode, timestampMillis, productId, currency, balanceBefore, balanceAfter, username } = req.body;
+        // const response = {
+        //     "id": "279478c1-c870-407e-91be-b70bf6a623f9",
+        //     "statusCode": 0,
+        //     "timestampMillis": 1631514418144,
+        //     "productId": "PRETTY",
+        //     "currency": "THB",
+        //     "balanceBefore": 10000,
+        //     "balanceAfter": 9800,
+        //     "username": "xo0001"
+        // }
+        
+        const response = {
+            id: id,
+            statusCode: 0,
+            timestampMillis: timestampMillis,
+            productId: productId,
+            currency: "THB",
+            balanceBefore: balanceBefore,
+            balanceAfter: balanceAfter,
+            username: username
+        };
+
+        let callbackData = {
+            "request_body": req.body,
+            "response": response
+        }
+        
+        await client.connect();
+        const db = client.db('gbcp');
+        const collection = db.collection('place_bets');
         const result = await collection.insertOne(callbackData);
         console.log('Saved to database:', result);
         res.status(200).send(response);
