@@ -6,6 +6,11 @@ const { MongoClient } = require('mongodb');
 const app = express();
 const client = new MongoClient(mongoURI);
 
+const setBalance = 1000;
+const balanceBefore = 0;
+const balanceAfter = 0;
+
+
 app.use(express.json());
 
 app.get('/', async (req, res) => {
@@ -67,7 +72,7 @@ app.post('/callback/checkBalance', async (req, res) => {
             timestampMillis: timestampMillis,
             productId: productId,
             currency: "THB",
-            balance: 1000,
+            balance: setBalance,
             username: username
         };
 
@@ -92,7 +97,7 @@ app.post('/callback/checkBalance', async (req, res) => {
 app.post('/callback/placeBets', async (req, res) => {
 
     try {
-        const { id, statusCode, timestampMillis, productId, currency, balanceBefore, balanceAfter, username } = req.body;
+        const { id, txns, statusCode, timestampMillis, productId, currency, balanceBefore, balanceAfter, username } = req.body;
         // const response = {
         //     "id": "279478c1-c870-407e-91be-b70bf6a623f9",
         //     "statusCode": 0,
@@ -103,15 +108,18 @@ app.post('/callback/placeBets', async (req, res) => {
         //     "balanceAfter": 9800,
         //     "username": "xo0001"
         // }
-        
+
+        const totalBetAmount = txns.reduce((sum, txn) => sum + txn.betAmount, 0);
+        let calBalanceBefore = balanceBefore - totalBetAmount;
+
         const response = {
             id: id,
             statusCode: 0,
             timestampMillis: timestampMillis,
             productId: productId,
             currency: "THB",
-            balanceBefore: 1000,
-            balanceAfter: 900,
+            balanceBefore: balanceBefore,
+            balanceAfter: calBalanceBefore,
             username: username
         };
 
@@ -136,7 +144,7 @@ app.post('/callback/placeBets', async (req, res) => {
 app.post('/callback/settleBets', async (req, res) => {
 
     try {
-        const { id, statusCode, timestampMillis, productId, currency, balanceBefore, balanceAfter, username } = req.body;
+        const { id, statusCode, txns, timestampMillis, productId, currency, balanceBefore, balanceAfter, username } = req.body;
         // const response = {
         //     "id": "279478c1-c870-407e-91be-b70bf6a623f9",
         //     "statusCode": 0,
