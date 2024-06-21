@@ -110,8 +110,8 @@ app.post('/callback/placeBets', async (req, res) => {
             timestampMillis: timestampMillis,
             productId: productId,
             currency: "THB",
-            balanceBefore: balanceBefore,
-            balanceAfter: balanceAfter,
+            balanceBefore: 1000,
+            balanceAfter: 900,
             username: username
         };
 
@@ -166,7 +166,7 @@ app.post('/callback/settleBets', async (req, res) => {
         
         await client.connect();
         const db = client.db('gbcp');
-        const collection = db.collection('place_bets');
+        const collection = db.collection('settle_bets');
         const result = await collection.insertOne(callbackData);
         console.log('Saved to database:', result);
         res.status(200).send(response);
