@@ -110,7 +110,7 @@ app.post('/callback/placeBets', async (req, res) => {
         // }
 
         let totalBetAmount = txns.reduce((sum, txn) => sum + txn.betAmount, 0);
-        let calBalanceBefore = setBalance - totalBetAmount;
+        setBalanceAfter = setBalance - totalBetAmount;
 
         const response = {
             id: id,
@@ -119,7 +119,7 @@ app.post('/callback/placeBets', async (req, res) => {
             productId: productId,
             currency: "THB",
             balanceBefore: setBalance,
-            balanceAfter: calBalanceBefore,
+            balanceAfter: setBalanceAfter,
             username: username
         };
 
@@ -156,10 +156,8 @@ app.post('/callback/settleBets', async (req, res) => {
         //     "username": "xo0001"
         // }
 
-        let totalBetAmount = txns.reduce((sum, txn) => sum + txn.betAmount, 0);
         let totalPayoutAmount = txns.reduce((sum, txn) => sum + txn.payoutAmount, 0);
-        let calbalanceBefore = setBalance - totalBetAmount;
-        let caltotalPayoutAmount = setBalance - totalPayoutAmount;
+        let caltotalPayoutAmount = setBalanceAfter + totalPayoutAmount;
         
         const response = {
             id: id,
@@ -167,7 +165,7 @@ app.post('/callback/settleBets', async (req, res) => {
             timestampMillis: timestampMillis,
             productId: productId,
             currency: "THB",
-            balanceBefore: calbalanceBefore,
+            balanceBefore: setBalanceAfter,
             balanceAfter: caltotalPayoutAmount,
             username: username
         };
