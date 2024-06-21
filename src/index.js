@@ -6,35 +6,15 @@ const { MongoClient } = require('mongodb');
 const app = express();
 const client = new MongoClient(mongoURI);
 
-const setBalance = 1000;
-const setBalanceBefore = 0;
-const setBalanceAfter = 0;
-
+let setBalance = 1000; // เปลี่ยนจาก const เป็น let
+let setBalanceBefore = 0; // เปลี่ยนจาก const เป็น let
+let setBalanceAfter = 0; // เปลี่ยนจาก const เป็น let
 
 app.use(express.json());
 
 app.get('/', async (req, res) => {
     res.status(200).send("Hello callback");
 });
-
-// app.post('/callback/checkBalance', async (req, res) => {
-//     const callbackData = req.body;
-//     console.log('Received callback data:', callbackData);
-
-//     try {
-//         await client.connect();
-//         const db = client.db('gbcp');
-//         const collection = db.collection('callback');
-//         const result = await collection.insertOne(callbackData);
-//         console.log('Saved to database:', result);
-//         res.status(200).send({ message: 'Callback received and saved successfully' });
-//     } catch (error) {
-//         console.error('Error saving to database:', error);
-//         res.status(500).send({ message: 'Failed to save callback data' });
-//     } finally {
-//         await client.close();
-//     }
-// });
 
 app.get('/invoke-callback', async (req, res) => {
     try {
@@ -53,19 +33,9 @@ app.get('/invoke-callback', async (req, res) => {
 });
 
 app.post('/callback/checkBalance', async (req, res) => {
-
     try {
         const { id, statusCode, timestampMillis, productId, currency, balance, username } = req.body;
-        // const response = {
-        //     id,
-        //     statusCode,
-        //     timestampMillis,
-        //     productId,
-        //     currency,
-        //     balance,
-        //     username
-        // };
-        
+
         const response = {
             id: id,
             statusCode: 0,
@@ -95,19 +65,8 @@ app.post('/callback/checkBalance', async (req, res) => {
 });
 
 app.post('/callback/placeBets', async (req, res) => {
-
     try {
         const { id, txns, statusCode, timestampMillis, productId, currency, balanceBefore, balanceAfter, username } = req.body;
-        // const response = {
-        //     "id": "279478c1-c870-407e-91be-b70bf6a623f9",
-        //     "statusCode": 0,
-        //     "timestampMillis": 1631514418144,
-        //     "productId": "PRETTY",
-        //     "currency": "THB",
-        //     "balanceBefore": 10000,
-        //     "balanceAfter": 9800,
-        //     "username": "xo0001"
-        // }
 
         let totalBetAmount = txns.reduce((sum, txn) => sum + txn.betAmount, 0);
         setBalanceAfter = setBalance - totalBetAmount;
@@ -142,23 +101,12 @@ app.post('/callback/placeBets', async (req, res) => {
 });
 
 app.post('/callback/settleBets', async (req, res) => {
-
     try {
         const { id, statusCode, txns, timestampMillis, productId, currency, balanceBefore, balanceAfter, username } = req.body;
-        // const response = {
-        //     "id": "279478c1-c870-407e-91be-b70bf6a623f9",
-        //     "statusCode": 0,
-        //     "timestampMillis": 1631514418144,
-        //     "productId": "PRETTY",
-        //     "currency": "THB",
-        //     "balanceBefore": 10000,
-        //     "balanceAfter": 9800,
-        //     "username": "xo0001"
-        // }
 
         let totalPayoutAmount = txns.reduce((sum, txn) => sum + txn.payoutAmount, 0);
         let caltotalPayoutAmount = setBalanceAfter + totalPayoutAmount;
-        
+
         const response = {
             id: id,
             statusCode: 0,
@@ -186,6 +134,11 @@ app.post('/callback/settleBets', async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
