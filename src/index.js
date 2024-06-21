@@ -7,8 +7,8 @@ const app = express();
 const client = new MongoClient(mongoURI);
 
 const setBalance = 1000;
-const balanceBefore = 0;
-const balanceAfter = 0;
+const setBalanceBefore = 0;
+const setBalanceAfter = 0;
 
 
 app.use(express.json());
@@ -109,8 +109,8 @@ app.post('/callback/placeBets', async (req, res) => {
         //     "username": "xo0001"
         // }
 
-        const totalBetAmount = txns.reduce((sum, txn) => sum + txn.betAmount, 0);
-        let calBalanceBefore = balanceBefore - totalBetAmount;
+        let totalBetAmount = txns.reduce((sum, txn) => sum + txn.betAmount, 0);
+        let calBalanceBefore = setBalance - totalBetAmount;
 
         const response = {
             id: id,
@@ -118,7 +118,7 @@ app.post('/callback/placeBets', async (req, res) => {
             timestampMillis: timestampMillis,
             productId: productId,
             currency: "THB",
-            balanceBefore: balanceBefore,
+            balanceBefore: setBalance,
             balanceAfter: calBalanceBefore,
             username: username
         };
@@ -155,6 +155,11 @@ app.post('/callback/settleBets', async (req, res) => {
         //     "balanceAfter": 9800,
         //     "username": "xo0001"
         // }
+
+        let totalBetAmount = txns.reduce((sum, txn) => sum + txn.betAmount, 0);
+        let totalPayoutAmount = txns.reduce((sum, txn) => sum + txn.payoutAmount, 0);
+        let calbalanceBefore = setBalance - totalBetAmount;
+        let caltotalPayoutAmount = setBalance - totalPayoutAmount;
         
         const response = {
             id: id,
@@ -162,8 +167,8 @@ app.post('/callback/settleBets', async (req, res) => {
             timestampMillis: timestampMillis,
             productId: productId,
             currency: "THB",
-            balanceBefore: balanceBefore,
-            balanceAfter: balanceAfter,
+            balanceBefore: calbalanceBefore,
+            balanceAfter: caltotalPayoutAmount,
             username: username
         };
 
